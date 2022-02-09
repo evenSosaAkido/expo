@@ -1,3 +1,5 @@
+import { css } from '@emotion/react';
+import { theme } from '@expo/styleguide';
 import { useRouter } from 'next/router';
 import React, { ComponentType, useMemo } from 'react';
 
@@ -6,6 +8,8 @@ import { GroupList } from './GroupList';
 import { PageLink } from './PageLink';
 import { SectionList } from './SectionList';
 import { NavigationNode, NavigationRenderProps, NavigationType } from './types';
+
+import { LayoutScroll } from '~/ui/components/Layout';
 
 export type NavigationProps = {
   /** The tree of navigation nodes to render in the sidebar */
@@ -16,9 +20,11 @@ export function Navigation({ routes }: NavigationProps) {
   const router = useRouter();
   const activeRoutes = useMemo(() => findActiveRoute(routes, router.pathname), [router.pathname]);
   return (
-    <nav>
-      <ApiVersionSelect />
-      {routes.map(route => navigationRenderer(route, activeRoutes))}
+    <nav css={navigationStyle}>
+      <LayoutScroll>
+        <ApiVersionSelect />
+        {routes.map(route => navigationRenderer(route, activeRoutes))}
+      </LayoutScroll>
     </nav>
   );
 }
@@ -98,3 +104,9 @@ export function findActiveRoute(routes: NavigationNode[], pathname: string) {
 
   return activeRoutes;
 }
+
+const navigationStyle = css({
+  backgroundColor: theme.background.secondary,
+  width: 280,
+  height: '100%',
+});

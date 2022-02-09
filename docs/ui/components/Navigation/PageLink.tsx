@@ -31,7 +31,7 @@ const linkStyle = css({
 });
 
 const linkStyleActive = css({
-  backgroundColor: theme.background.default,
+  backgroundColor: theme.background.tertiary,
   boxShadow: shadows.micro,
 });
 
