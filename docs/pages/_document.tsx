@@ -1,5 +1,5 @@
-import { Global } from '@emotion/react';
-import { BlockingSetInitialColorMode } from '@expo/styleguide';
+import { css, Global } from '@emotion/react';
+import { BlockingSetInitialColorMode, theme } from '@expo/styleguide';
 import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document';
 import React from 'react';
 
@@ -33,6 +33,7 @@ export default class MyDocument extends Document<{ css?: string }> {
               globalPrism,
               globalTippy,
               globalExtras,
+              backgroundStyle,
             ]}
           />
 
@@ -53,3 +54,10 @@ export default class MyDocument extends Document<{ css?: string }> {
     );
   }
 }
+
+const backgroundStyle = css({
+  'html, body': {
+    backgroundColor: theme.background.default,
+    overflow: 'hidden', // TODO(cedric): check why some pages overflow out of the grid system
+  },
+});
