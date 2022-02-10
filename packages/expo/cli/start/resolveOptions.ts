@@ -26,7 +26,7 @@ export async function persistOptionsAsync(options: Options) {
   const ProcessSettings = await import('./ProcessSettings').then((m) => m.default);
   ProcessSettings.isOffline = options.offline;
 
-  const { setPersistedOptions } = await import('./startDevServers');
+  const { setPersistedOptions } = await import('./server/startDevServers');
   setPersistedOptions({
     devClient: options.devClient,
     forceManifestType: options.forceManifestType,

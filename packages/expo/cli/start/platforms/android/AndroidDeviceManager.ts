@@ -4,24 +4,22 @@ import chalk from 'chalk';
 import * as Log from '../../../log';
 import { AbortCommandError, CommandError } from '../../../utils/errors';
 import { validateUrl } from '../../../utils/url';
-import { VirtualDeviceManager } from '../VirtualDeviceManager';
-import { activateWindowAsync } from './activateWindowAsync';
+import { DeviceManager } from '../DeviceManager';
+import { BaseResolveDeviceProps } from '../PlatformManager';
+import { activateWindowAsync } from './activateWindow';
 import * as AndroidDeviceBridge from './AndroidDeviceBridge';
-import { getDevicesAsync } from './getDevicesAsync';
-import { promptForDeviceAsync } from './promptAndroidDeviceAsync';
-import { startDeviceAsync } from './startDeviceAsync';
+import { getDevicesAsync } from './getDevices';
+import { promptForDeviceAsync } from './promptAndroidDevice';
+import { startDeviceAsync } from './startDevice';
 
-export class VirtualAndroidDeviceManager extends VirtualDeviceManager<AndroidDeviceBridge.Device> {
+export class AndroidDeviceManager extends DeviceManager<AndroidDeviceBridge.Device> {
   static async resolveAsync({
     device,
     shouldPrompt,
-  }: {
-    device?: AndroidDeviceBridge.Device;
-    shouldPrompt?: boolean;
-  } = {}): Promise<VirtualAndroidDeviceManager> {
+  }: BaseResolveDeviceProps<AndroidDeviceBridge.Device> = {}): Promise<AndroidDeviceManager> {
     if (device) {
       // await AndroidDeviceBridge.startAdbReverseAsync();
-      const manager = new VirtualAndroidDeviceManager(device);
+      const manager = new AndroidDeviceManager(device);
       if (!(await manager.attemptToStartAsync())) {
         throw new AbortCommandError();
       }
@@ -30,7 +28,7 @@ export class VirtualAndroidDeviceManager extends VirtualDeviceManager<AndroidDev
 
     const devices = await getDevicesAsync();
     const _device = shouldPrompt ? await promptForDeviceAsync(devices) : devices[0];
-    return VirtualAndroidDeviceManager.resolveAsync({ device: _device, shouldPrompt: false });
+    return AndroidDeviceManager.resolveAsync({ device: _device, shouldPrompt: false });
   }
 
   get name() {

@@ -1,10 +1,10 @@
 import { BaseOpenInCustomProps, BaseResolveDeviceProps, PlatformManager } from '../PlatformManager';
-import { VirtualDeviceManager } from '../VirtualDeviceManager';
+import { DeviceManager } from '../DeviceManager';
 import { Device } from './AndroidDeviceBridge';
 import * as AndroidDeviceBridge from './AndroidDeviceBridge';
 import { ensureDeviceHasValidExpoGoAsync } from './ensureExpoGo';
 import { resolveAppIdAsync } from './resolveAppId';
-import { VirtualAndroidDeviceManager } from './VirtualAndroidDeviceManager';
+import { AndroidDeviceManager } from './AndroidDeviceManager';
 
 interface AndroidOpenInCustomProps extends BaseOpenInCustomProps {
   launchActivity?: string;
@@ -24,7 +24,7 @@ export class AndroidPlatformManager extends PlatformManager<Device, AndroidOpenI
       getDevServerUrl,
       () => constructLoadingUrl(this.platform),
       constructManifestUrl,
-      VirtualAndroidDeviceManager.resolveAsync
+      AndroidDeviceManager.resolveAsync
     );
   }
 
@@ -39,7 +39,7 @@ export class AndroidPlatformManager extends PlatformManager<Device, AndroidOpenI
   }
 
   protected async ensureDeviceHasValidExpoGoAsync(
-    deviceManager: VirtualDeviceManager<Device>
+    deviceManager: DeviceManager<Device>
   ): Promise<boolean> {
     return ensureDeviceHasValidExpoGoAsync(this.projectRoot, deviceManager);
   }

@@ -6,16 +6,17 @@ import { delayAsync, TimeoutError } from '../../../utils/delay';
 import { CommandError } from '../../../utils/errors';
 import { profile } from '../../../utils/profile';
 import { validateUrl } from '../../../utils/url';
-import { VirtualDeviceManager } from '../VirtualDeviceManager';
+import { DeviceManager } from '../DeviceManager';
 import {
   getBestBootedSimulatorAsync,
   getBestUnbootedSimulatorAsync,
   getSelectableSimulatorsAsync,
 } from './getBestSimulator';
-import { isSimulatorInstalledAsync } from './isSimulatorInstalledAsync';
+import { isSimulatorInstalledAsync } from './isSimulatorInstalled';
 import { promptAppleDeviceAsync } from './promptAppleDevice';
 import * as SimControl from './SimControl';
-import { ensureSimulatorAppRunningAsync } from './ensureSimulatorAppRunningAsync';
+import { ensureSimulatorAppRunningAsync } from './ensureSimulatorAppRunning';
+import { BaseResolveDeviceProps } from '../PlatformManager';
 
 const EXPO_GO_BUNDLE_IDENTIFIER = 'host.exp.Exponent';
 
@@ -54,7 +55,7 @@ async function ensureSimulatorOpenAsync(
   return bootedDevice;
 }
 
-export class VirtualAppleDeviceManager extends VirtualDeviceManager<SimControl.SimulatorDevice> {
+export class AppleDeviceManager extends DeviceManager<SimControl.SimulatorDevice> {
   static async assertSystemRequirementsAsync() {
     assert(
       await profile(isSimulatorInstalledAsync)(),
@@ -66,18 +67,16 @@ export class VirtualAppleDeviceManager extends VirtualDeviceManager<SimControl.S
     device,
     osType,
     shouldPrompt,
-  }: {
-    device?: Pick<SimControl.SimulatorDevice, 'udid'>;
-    osType?: string;
-    shouldPrompt?: boolean;
-  } = {}): Promise<VirtualAppleDeviceManager> {
+  }: BaseResolveDeviceProps<
+    Pick<SimControl.SimulatorDevice, 'udid'>
+  > = {}): Promise<AppleDeviceManager> {
     if (shouldPrompt) {
       const devices = await getSelectableSimulatorsAsync({ osType });
       device = await promptAppleDeviceAsync(devices, osType);
     }
 
     const booted = await ensureSimulatorOpenAsync({ udid: device?.udid, osType });
-    return new VirtualAppleDeviceManager(booted);
+    return new AppleDeviceManager(booted);
   }
 
   get name() {

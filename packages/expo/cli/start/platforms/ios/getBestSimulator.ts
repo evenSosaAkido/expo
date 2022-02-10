@@ -1,5 +1,6 @@
 import { execSync } from 'child_process';
 
+import { CommandError } from '../../../utils/errors';
 import * as SimControl from './SimControl';
 
 function getDefaultSimulatorDeviceUDID() {
@@ -50,7 +51,10 @@ export async function getBestUnbootedSimulatorAsync({
 
   if (!simulators.length) {
     // TODO: Prompt to install the simulators
-    throw new Error(`No ${osType || 'iOS'} devices available in Simulator.app`);
+    throw new CommandError(
+      'UNSUPPORTED_OS_TYPE',
+      `No ${osType || 'iOS'} devices available in Simulator.app`
+    );
   }
 
   // If the default udid is defined, then check to ensure its osType matches the required os.

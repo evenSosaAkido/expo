@@ -5,13 +5,13 @@ import { getVersionsAsync } from '../../../api/getVersions';
 import { downloadExpoGoAsync } from '../../../utils/downloadExpoGoAsync';
 import { logNewSection } from '../../../utils/ora';
 import { confirmAsync } from '../../../utils/prompts';
-import { VirtualDeviceManager } from '../VirtualDeviceManager';
+import { DeviceManager } from '../DeviceManager';
 import { SimulatorDevice } from './SimControl';
 
 const EXPO_GO_IOS_APPLICATION_ID = 'host.exp.Exponent';
 
 async function isClientOutdatedAsync<IDevice>(
-  device: VirtualDeviceManager<IDevice>,
+  device: DeviceManager<IDevice>,
   sdkVersion?: string
 ): Promise<boolean> {
   const versions = await getVersionsAsync();
@@ -44,7 +44,7 @@ async function getClientForSDK(sdkVersionString?: string) {
 /** Returns a boolean indicating if Expo Go should be installed. */
 async function uninstallExpoGoIfOutdatedAsync<IDevice extends SimulatorDevice>(
   projectRoot: string,
-  deviceManager: VirtualDeviceManager<IDevice>
+  deviceManager: DeviceManager<IDevice>
 ) {
   const promptKey = deviceManager.device.udid ?? 'unknown';
 
@@ -72,7 +72,7 @@ async function uninstallExpoGoIfOutdatedAsync<IDevice extends SimulatorDevice>(
 
 export async function ensureDeviceHasValidExpoGoAsync<IDevice extends SimulatorDevice>(
   projectRoot: string,
-  deviceManager: VirtualDeviceManager<IDevice>
+  deviceManager: DeviceManager<IDevice>
 ): Promise<boolean> {
   let shouldInstall = !(await deviceManager.isAppInstalledAsync(EXPO_GO_IOS_APPLICATION_ID));
 

@@ -2,7 +2,8 @@ import chalk from 'chalk';
 
 import * as Log from '../../log';
 
-export class VirtualDeviceManager<IDevice> {
+/** An abstract class for interacting with a native device. */
+export class DeviceManager<IDevice> {
   constructor(public device: IDevice) {}
 
   get name(): string {
